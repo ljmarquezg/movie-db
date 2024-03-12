@@ -1,0 +1,236 @@
+.movie-title {
+    position: absolute;
+    bottom: 0;
+    font-size: 1rem;
+    padding: 16px 12px;
+    width: 100%;
+    border-bottom-left-radius: 24px;
+    border-bottom-right-radius: 24px;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.movie-container span {
+    position: relative;
+    z-index: 1;
+}
+
+.movie-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    width: 100%;
+    height: 100%;
+    animation: skeleton;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}
+
+.movie-wrapper:after {
+    content: '';
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 16px;
+    position: absolute;
+    height: 100%;
+    background: rgb(2, 0, 36);
+    background: linear-gradient(0deg, rgba(2, 0, 36, 0.6) 20%, rgba(2, 0, 36, 0) 100%);
+    z-index: 0;
+}
+
+#movieDetail {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.movieDetail-info-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.movieDetail-main {
+    flex: auto;
+}
+
+.movieDetail-sidebar {
+    flex-direction: column;
+    min-width: 320px;
+    max-width: 320px;
+    padding-left: 10px;
+}
+
+.movieDetail-sidebar .rating-container {
+    top: 0;
+    right: 5px;
+    transform: scale(.75);
+}
+
+.movieDetail-sidebar .movie-container {
+    width: 100%;
+}
+
+.movieDetail-sidebar .movie-wrapper {
+    aspect-ratio: 1.7;
+}
+
+.movieDetail-sidebar .movie-container img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 32px;
+}
+
+.movieDetail-sidebar .movie-container img:not(.loaded) {
+    height: 100%;
+    width: 100%;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.movieDetail-info-wrapper .rating-container {
+    position: relative;
+    top: unset;
+    bottom: unset;
+    right: unset;
+}
+
+.movieDetail-poster {
+    color: var(--color-light);
+    min-width: 320px;
+    height: auto;
+    overflow: hidden;
+    display: flex;
+    padding: 20px;
+    border-radius: 24px;
+}
+
+
+.movieDetail-info {
+    position: relative;
+    flex-direction: column;
+    display: flex;
+    height: 100%;
+}
+
+.movieDetails-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.movieDetails-score-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.movieDetail-votes {
+    font-size: var(--font-size-small);
+}
+
+.movieDetail-title {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.movieDetail-recommendation-title {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.actor-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-top: 16px;
+    flex: 1;
+    min-width: 260px;
+}
+
+.actor-container:nth-child(2n) {
+    border-left: solid 1px white;
+    border-right: solid 1px white;
+}
+
+.movieDetail-cast {
+    max-width: 100%;
+}
+
+.movieDetail-cast-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow: auto;
+    min-width: 100%;
+}
+
+.actor-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 8px 16px;
+}
+
+.actor-img {
+    min-width: 64px;
+    min-height: 64px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+}
+
+.actor-name {
+    font-size: var(--font-size-h6);
+    font-weight: bold;
+}
+
+.actor-character {
+    font-size: var(--font-size-small);
+    font-weight: normal;
+}
+
+.actor-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin-left: 12px;
+}
+
+@media (min-width: 768px) {
+    #movieDetail .categories-list {
+        order: 1;
+    }
+
+    #movieDetail .movieDetails-header {
+        order: 0;
+        padding-top: 20px;
+    }
+
+    .movieDetail-description {
+        order: 2;
+    }
+
+    .movieDetail-main {
+        max-width: calc(100% - 320px);
+    }
+
+    .movieDetail-sidebar {
+        padding-left: 40px;
+    }
+
+    .movieDetail-sidebar ul {
+        position: sticky;
+        overflow: auto;
+        max-height: 100vh;
+        top: 30px;
+    }
+}

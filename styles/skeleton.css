@@ -1,0 +1,58 @@
+.trendingPreview-highlight .skeleton{
+    min-height: 70vh;
+    animation: skeleton;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    background-color: var(--color-skeleton-light);
+    border-radius: 0;
+}
+
+.skeleton .movie-wrapper {
+    animation: skeleton;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    background-color: var(--color-skeleton-light);
+    border: solid #ffffff40 3px;
+}
+
+.skeleton .movie-title {
+    height: 16px;
+    padding: 0;
+    bottom: 30px;
+    width: 55%;
+    border-radius: 5px;
+    left: 13px;
+    animation: skeleton;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}
+
+.skeleton .percentage {
+    height: 24px;
+    width: 24px;
+    animation: skeleton;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    border-radius: 50%;
+}
+
+.skeleton.category-container {
+    height: 24px;
+    width: 100px;
+    animation: skeleton;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    border-radius: 50px;
+}
+@keyframes skeleton {
+    0% {
+        background-color: hsl(200, 20%, 40%);
+    }
+    50% {
+        background-color: hsl(200, 20%, 60%);
+    }
+
+    100% {
+        background-color: hsl(200, 20%, 40%);
+    }
+}
