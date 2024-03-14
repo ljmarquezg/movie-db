@@ -1,5 +1,7 @@
 const IMG_URL = 'https://image.tmdb.org';
 const offsetValue = 560;
+let page = 1;
+let maxPage;
 const getLanguageSelectorValue = () => {
   return languageSelector.value;
 }
@@ -14,18 +16,42 @@ const api = axios.create({
   }
 });
 
-let lazyLoader = new IntersectionObserver((entries, observer) => {
+const config = {
+  root: null, // Sets the framing element to the viewport
+  rootMargin: "0px",
+  threshold: 0.5
+};
+
+const calculateLazyLoadExecution = async ({ url, params }) => {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+  const scrollIsBottom = (scrollTop + clientHeight) >= (scrollHeight - 20);
+  const isNotMaxPage = page < maxPage;
+
+  if (scrollIsBottom && isNotMaxPage) {
+    const { data } = await api.get(url,
+      {
+        params: {
+          ...params,
+          language: getLanguageSelectorValue(),
+          page: page++
+        }
+      });
+    const movies = data.results;
+    generateMoviePosters(genericSection, movies, { clearContent: false });
+  }
+}
+
+let lazyLoader = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    console.log(entry);
     if (entry.isIntersecting) {
-      entry.target.src = entry.target.dataset.img;
-      observer.unobserve(entry.target);
+      const url = entry.target.getAttribute('data-img');
+      entry.target.setAttribute('src', url);
     }
   });
-});
+}, config);
 
 /** Utils for UI Elements */
-calculateOffset = (rating) => {
+calculateRatingOffset = (rating) => {
   return offsetValue - (rating * 60)
 }
 
@@ -50,28 +76,41 @@ const generateRating = (rating) => {
     <div class="rating-bar ${calculateRating(rating)}">
       <svg x="0px" y="0px" viewBox="0 0 200 200">
         <circle class="progress-bar" cx="100" cy="100" r="90"/>
-        <circle class="progress-value" cx="100" cy="100" r="90" stroke-dashoffset="${calculateOffset(rating)}"/>
+        <circle class="progress-value" cx="100" cy="100" r="90" stroke-dashoffset="${calculateRatingOffset(rating)}"/>
       </svg>
       <div class="percentage">${rating.toFixed(1)}</div>
     </div>
   </div>`;
 };
 
-const imageLoaded = (e) => {
-  console.log(e.target);
-  e.target.classList.add('loaded');
-  // console.log(e.target);
-  // e.target.parentElement.classList.remove('skeleton');
-};
+const generateImage = (url, alt, className, lazyLoad) => {
+  const img = document.createElement('img');
+  if (className) {
+    img.classList.add(className);
+  }
+  // img.setAttribute('src', url);
+  img.setAttribute(lazyLoad ? 'data-img' : 'src', url);
+  img.setAttribute('alt', alt);
+
+  img.addEventListener('error', (event) => {
+    console.log('error', event.target);
+    img.setAttribute('src', 'https://via.placeholder.com/280x420');
+  });
+
+  if (lazyLoad) {
+    lazyLoader.observe(img);
+  }
+  return img;
+}
 
 const generateHighlightSection = (trendingMovieHighlight, movie) => {
   trendingMovieHighlight.innerHTML = '';
-  const img = document.createElement('img');
-  img.classList.add('highlight-img');
-  img.src = `${IMG_URL}/t/p/original/${movie.backdrop_path}`;
-  img.alt = movie.title;
-  img.addEventListener('load', imageLoaded)
-
+  const img = generateImage(
+    `${IMG_URL}/t/p/original/${movie.backdrop_path}`,
+    movie.title,
+    'highlight-img',
+    true
+  );
   const movieTitle = document.createElement('h2');
   movieTitle.classList.add('highlight-title', 'h1');
   movieTitle.textContent = movie.title;
@@ -97,18 +136,19 @@ const generateHighlightSection = (trendingMovieHighlight, movie) => {
   trendingMovieHighlight.appendChild(div);
 };
 
-const generateMoviePosters = (target, movies, horizontal = false, size = 300) => {
-  target.innerHTML = '';
+const generateMoviePosters = (target, movies, { clearContent = true, size = 300, } = {}) => {
+
+  if (clearContent) {
+    target.innerHTML = '';
+  }
   movies.forEach(movie => {
-    const poster = horizontal ? 'backdrop_path' : 'poster_path';
-    const img = document.createElement('img');
-    img.classList.add('movie-img');
-    img.src = `${IMG_URL}/t/p/w${size}/${movie[poster] || movie.poster_path}`;
-    img.alt = movie.title;
-    img.addEventListener('load', imageLoaded)
-    img.addEventListener('error', () => {
-      alert('error')
-    })
+    const poster = 'poster_path';
+    const img = generateImage(
+      `${IMG_URL}/t/p/w${size}${movie.poster_path}`,
+      movie.title,
+      'movie-img',
+      true
+    );
 
     const movieTitle = document.createElement('h3');
     movieTitle.classList.add('movie-title');
@@ -152,11 +192,12 @@ const generateCategories = (target, categories) => {
 const generateMovieCast = (target, cast) => {
   target.innerHTML = '';
   cast.forEach(actor => {
-    const img = document.createElement('img');
-    img.classList.add('actor-img');
-    img.src = `${IMG_URL}/t/p/w300/${actor.profile_path}`;
-    img.alt = actor.name;
-    img.addEventListener('load', imageLoaded)
+    const img = generateImage(
+      `${IMG_URL}/t/p/w300/${actor.profile_path}`,
+      actor.name,
+      'actor-img',
+      true
+    );
 
     const actorName = document.createElement('h3');
     actorName.classList.add('actor-name');
@@ -181,22 +222,29 @@ const generateMovieCast = (target, cast) => {
     item.appendChild(actorWrapper);
     target.appendChild(item);
   });
-
 }
 
 /** Fetch Trending Movies */
 const getMovieVideoByMovieId = async (id) => {
+  moviePlayer.innerHTML = '';
   const { data } = await api.get(`/movie/${id}/videos`, {
     params: {
       language: getLanguageSelectorValue(),
     }
   });
   const results = data.results;
-  const youtubeVideo = results.find(video =>
+  let youtubeVideo = results.find(video =>
     video.site === 'YouTube' &&
     video.type === 'Trailer' &&
     video.official === true
   );
+  if (!youtubeVideo) {
+    youtubeVideo = results.find(video =>
+      video.site === 'YouTube' &&
+      video.type === 'Trailer'
+    )
+  }
+
   if (youtubeVideo) {
     moviePlayer.innerHTML = `
     <iframe
@@ -242,13 +290,39 @@ const getMoviesByCategoryId = async (id) => {
   generateMoviePosters(genericSection, movies);
 }
 
+const getPaginatedMoviesByCategoryId = (id) => {
+  return async () => {
+    await calculateLazyLoadExecution({
+      url: '/discover/movie',
+      params: { with_genres: id },
+    });
+  }
+}
+
+const getPaginatedMoviesByQueryParam = (query) => {
+  return async () => {
+    await calculateLazyLoadExecution({
+      url: '/search/movie',
+      params: { query },
+    });
+  }
+}
+
 const getMoviesByQueryParam = async (query) => {
   const { data } = await api.get('/search/movie', {
     params: { query },
     language: getLanguageSelectorValue(),
   });
   const movies = data.results;
+  maxPage = data.total_pages;
   generateMoviePosters(genericSection, movies);
+}
+
+const getPaginatedTrendingMovies = async () => {
+  await calculateLazyLoadExecution({
+    url: '/trending/movie/day',
+    params: {},
+  });
 }
 
 const getTrendingMovies = async () => {
@@ -259,8 +333,8 @@ const getTrendingMovies = async () => {
       }
     });
   const movies = data.results;
+  maxPage = data.total_pages;
   generateMoviePosters(genericSection, movies);
-  getMovieVideoByMovieId(data.id);
 }
 
 const getRelatedMoviesById = async (id) => {
@@ -269,7 +343,7 @@ const getRelatedMoviesById = async (id) => {
       language: getLanguageSelectorValue(),
     }
   });
-  generateMoviePosters(movieDetailRecommendedList, data.results, true);
+  generateMoviePosters(movieDetailRecommendedList, data.results);
 }
 
 const getMovieCastById = async (id) => {
@@ -289,10 +363,11 @@ const getMoviesById = async (id) => {
       language: getLanguageSelectorValue(),
     }
   });
-  const posterImg = `${IMG_URL}/t/p/w500${data.poster_path}`;
-  const poster = document.createElement('img');
-  poster.src = posterImg;
-  poster.alt = data.title;
+  const posterImg = `${IMG_URL}/t/p/w300${data.poster_path}`;
+  const poster = generateImage(
+    posterImg,
+    data.title
+  );
 
   const backdropImg = `${IMG_URL}/t/p/w500${data.backdrop_path}`;
   const headerImg = document.createElement('img');

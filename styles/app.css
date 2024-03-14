@@ -239,6 +239,7 @@ ul {
     margin-bottom: 16px;
     position: relative;
     min-width: 240px;
+    width: 240px;
     height: 322px;
     transition: .3s all ease-in-out;
     cursor: pointer;
@@ -329,7 +330,7 @@ input {
     }*/
 }
 
-.main-content {
+.trendingPreview-highlight:not(.inactive) ~ .main-content {
     margin-top: -20vh;
     z-index: 1;
     position: relative;

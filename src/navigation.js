@@ -1,10 +1,15 @@
+let infiniteScroll;
+
 const hideSections = (sectionList) => {
   if (sectionList.length > 0) {
     sectionList.forEach(section => {
-      section.classList.add('inactive');
+      if (section) {
+        section.classList.add('inactive');
+      }
     });
   }
 }
+
 const showSections = (sectionList) => {
   if (sectionList.length > 0) {
     sectionList.forEach(section => {
@@ -20,11 +25,9 @@ const hideMovieDetailsSection = () => {
 }
 
 const homePage = () => {
-  /*  headerSection.classList.remove('header-container--long');
-   headerSection.style.background = '';*/
   hideMovieDetailsSection();
   hideSections([arrowBtn, headerCategoryTitle, genericSection, movieDetailSection]);
-  showSections([headerTitle, searchForm, trendingPreviewSection, categoriesPreviewSection])
+  showSections([headerTitle, searchForm, trendingPreviewSection, trendingMovieHighlight, categoriesPreviewSection])
 
   getTrendingMoviesPreview();
   getCategoriesPreview();
@@ -35,30 +38,33 @@ const trendsPage = () => {
   hideSections([categoriesPreviewSection, headerTitle, headerCategoryTitle, trendingPreviewSection, movieDetailSection, searchForm]);
   showSections([arrowBtn, genericSection, movieVideoContainer]);
   getTrendingMovies();
+  infiniteScroll = getPaginatedTrendingMovies;
 }
 
 const categoryPage = () => {
   hideMovieDetailsSection();
-  hideSections([headerTitle, searchForm, movieDetailSection, movieVideoContainer, trendingPreviewSection, categoriesPreviewSection]);
+  hideSections([headerTitle, searchForm, movieDetailSection, movieVideoContainer, trendingPreviewSection, trendingMovieHighlight, categoriesPreviewSection]);
   showSections([arrowBtn, headerCategoryTitle, genericSection]);
   const [_, caetgoryData] = location.hash.split('=');
 
   const [categoryName, categoryId] = caetgoryData.split('-');
   headerCategoryTitle.textContent = categoryName;
   getMoviesByCategoryId(categoryId);
+  infiniteScroll = getPaginatedMoviesByCategoryId(categoryId);
 }
 
 const searchPage = () => {
   hideMovieDetailsSection();
-  hideSections([categoriesPreviewSection, headerTitle, headerCategoryTitle, movieDetailSection, movieVideoContainer, trendingPreviewSection]);
+  hideSections([categoriesPreviewSection, headerTitle, headerCategoryTitle, movieDetailSection, movieVideoContainer, trendingMovieHighlight, trendingPreviewSection]);
   showSections([arrowBtn, searchForm, genericSection]);
 
   const [_, searchParam] = location.hash.split('=');
   getMoviesByQueryParam(searchParam);
+  infiniteScroll = getPaginatedMoviesByQueryParam(searchParam);
 }
 
 const movieDetailsPage = () => {
-  hideSections([categoriesPreviewSection, headerCategoryTitle, genericSection, searchForm, trendingPreviewSection]);
+  hideSections([categoriesPreviewSection, headerCategoryTitle, genericSection, searchForm, trendingMovieHighlight, trendingPreviewSection]);
   showSections([arrowBtn, headerTitle, movieDetailSection, movieDetailTitle, movieDetailDescription, movieDetailScore]);
 
   const [_, movieId] = location.hash.split('=');
@@ -66,6 +72,12 @@ const movieDetailsPage = () => {
 }
 
 const navigator = () => {
+
+  if (infiniteScroll) {
+    infiniteScroll = undefined;
+    window.removeEventListener('scroll', infiniteScroll);
+  }
+
   switch (true) {
     case location.hash.startsWith('#trends'):
       trendsPage();
@@ -85,10 +97,10 @@ const navigator = () => {
 
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
-  const targets = document.querySelectorAll('[data-img]');
-  targets.forEach(target => {
-    console.log(observer.observe(target));
-  });
+
+  if (infiniteScroll) {
+    window.addEventListener('scroll', infiniteScroll, { passive: false });
+  }
 }
 
 const translateLanguage = (selector, string) => {
