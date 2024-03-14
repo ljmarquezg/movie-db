@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MLMovies Db</title>
+  <title>MLMovies Db</title>
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Saira:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  >
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+  />
+  <link
+    rel="stylesheet"
+    href="styles/app.css"
+  >
+  <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+
+<body>
+<div
+  id="navigation"
+  class="navigation-container"
+>
+  <div class="container">
+    <a
+      class="brand"
+      href="#home"
+    >
+      ML Movie Db
+    </a>
+
+    <nav>
+      <ul>
+        <li><a
+          class="trendingText"
+          href="#trends"
+        >Trending</a></li>
+        <li><a
+          class="categoryText"
+          href="#categories"
+        >Categories</a></li>
+        <li><a
+          class="aboutText"
+          href="#about"
+        >About</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-end">
+      <select
+        name="language"
+        id="languageSelector"
+        class="select"
+      >
+        <option value="en">English</option>
+        <option value="es">Spanish</option>
+      </select>
+      <div class="user-profile">
+        <img
+          src="./images/user.png"
+          alt="User Profile"
+          class="user-image"
+        >
+      </div>
+    </div>
+  </div>
+</div>
+<div class="header-actions inactive">
+  <div
+    class="header-arrow"
+    id="arrowBtn"
+  >
+    <button class="material-symbols-outlined">arrow_back</button>
+  </div>
+  <h2 class="header-title inactive"></h2>
+  <h2 class="header-title--categoryView inactive">Category</h2>
+</div>
+
+<!-- hihglighted Movie -->
+<div class="trendingPreview-highlight">
+  <div class="skeleton"></div>
+</div>
+
+<div class="container main-content">
+  <!-- Search Form -->
+  <div
+    id="searchForm"
+    class="search"
+  >
+    <input
+      type="text"
+      placeholder="Search"
+      class="search-input"
+    >
+    <button
+      id="searchBtn"
+      class="search-button"
+    >
+      <img
+        src="./images/search.svg"
+        alt="Search"
+      >
+    </button>
+  </div>
+
+  <!-- Trengind Movies -->
+  <section id="tendingPreview">
+    <div class="tittle-wrapper">
+      <h2 class="trendingMoviesText h5">Trending Movies</h2>
+      <button id="trendingBtn" class="btn btn-primary viewAllText inactive">View All
+      </button>
+    </div>
+
+    <article class="trendingPreview-movieList">
+      <article class="movie-container skeleton">
+        <div class="movie-wrapper">
+          <h3 class="movie-title"></h3>
+          <div class="rating-container">
+            <div class="rating-bar">
+              <svg
+                x="0px"
+                y="0px"
+                viewBox="0 0 200 200"
+              >
+                <circle
+                  class="progress-bar"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                ></circle>
+                <circle
+                  class="progress-value"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                  stroke-dashoffset="84.92000000000002"
+                ></circle>
+              </svg>
+              <div class="percentage"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="movie-container skeleton">
+        <div class="movie-wrapper">
+          <h3 class="movie-title"></h3>
+          <div class="rating-container">
+            <div class="rating-bar">
+              <svg
+                x="0px"
+                y="0px"
+                viewBox="0 0 200 200"
+              >
+                <circle
+                  class="progress-bar"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                ></circle>
+                <circle
+                  class="progress-value"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                  stroke-dashoffset="84.92000000000002"
+                ></circle>
+              </svg>
+              <div class="percentage"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="movie-container skeleton">
+        <div class="movie-wrapper">
+          <h3 class="movie-title"></h3>
+          <div class="rating-container">
+            <div class="rating-bar">
+              <svg
+                x="0px"
+                y="0px"
+                viewBox="0 0 200 200"
+              >
+                <circle
+                  class="progress-bar"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                ></circle>
+                <circle
+                  class="progress-value"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                  stroke-dashoffset="84.92000000000002"
+                ></circle>
+              </svg>
+              <div class="percentage"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="movie-container skeleton">
+        <div class="movie-wrapper">
+          <h3 class="movie-title"></h3>
+          <div class="rating-container">
+            <div class="rating-bar">
+              <svg
+                x="0px"
+                y="0px"
+                viewBox="0 0 200 200"
+              >
+                <circle
+                  class="progress-bar"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                ></circle>
+                <circle
+                  class="progress-value"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                  stroke-dashoffset="84.92000000000002"
+                ></circle>
+              </svg>
+              <div class="percentage"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="movie-container skeleton">
+        <div class="movie-wrapper">
+          <h3 class="movie-title"></h3>
+          <div class="rating-container">
+            <div class="rating-bar">
+              <svg
+                x="0px"
+                y="0px"
+                viewBox="0 0 200 200"
+              >
+                <circle
+                  class="progress-bar"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                ></circle>
+                <circle
+                  class="progress-value"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                  stroke-dashoffset="84.92000000000002"
+                ></circle>
+              </svg>
+              <div class="percentage"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </article>
+  </section>
+
+  <!-- Movie Categories -->
+  <section id="categoriesPreview" class="inactive">
+    <h2 class="categoryText h5"></h2>
+    <article class="categoriesPreview-movieList">
+      <div class="category-container skeleton"><h3 class="category-title"></h3></div>
+      <div class="category-container skeleton"><h3 class="category-title"></h3></div>
+      <div class="category-container skeleton"><h3 class="category-title"></h3></div>
+      <div class="category-container skeleton"><h3 class="category-title"></h3></div>
+      <div class="category-container skeleton"><h3 class="category-title"></h3></div>
+    </article>
+  </section>
+
+  <!-- Generic List -->
+  <section id="genericList">
+    <h2 class="generic-title">Generic List</h2>
+    <article class="categoriesPreview-list"></article>
+  </section>
+
+  <!-- Generic List -->
+  <section id="movieDetail">
+    <div class="movieDetail-main">
+      <!-- Video Section -->
+      <div id="player"></div>
+      <!-- Movie Detail Info Wrapper-->
+      <div class="movieDetail-info-wrapper">
+        <!-- Movie Poster -->
+        <div class="movieDetail-poster"></div>
+
+        <!-- Movie Info -->
+        <div class="movieDetail-info">
+          <ul class="categories-list"></ul>
+          <div class="movieDetails-header">
+            <h1 class="movieDetail-title"></h1>
+            <div class="movieDetails-score-wrapper">
+              <span class="movieDetail-score"></span>
+              <span class="movieDetail-votes"></span>
+            </div>
+          </div>
+          <p class="movieDetail-description"></p>
+        </div>
+      </div>
+
+      <!-- Movie Cast -->
+      <div class="movieDetail-cast">
+        <h3 class="movieDetail-cast-title"></h3>
+        <ul class="movieDetail-cast-list"></ul>
+      </div>
+
+    </div>
+
+    <!-- Recommended Sidebar -->
+    <div class="movieDetail-sidebar">
+      <h3 class="movieDetail-recommendation-title"></h3>
+      <ul class="movieDetail-recommended-list"></ul>
+      <div class="movieDetail-trailer"></div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="src/secrets.js"></script>
+<script src="src/translations/translations_es.js"></script>
+<script src="src/translations/translations_en.js"></script>
+<script src="src/youtube.js"></script>
+<script src="src/translations.js"></script>
+<script src="src/nodes.js"></script>
+<script src="src/main.js"></script>
+<script src="src/navigation.js"></script>
+</body>
+</html>
