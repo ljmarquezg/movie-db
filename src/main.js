@@ -16,6 +16,31 @@ const api = axios.create({
   }
 });
 
+const getFavouriteMovies = () => {
+  const favouriteMovies = localStorage.getItem('favouriteMovies');
+  return JSON.parse(favouriteMovies) || {};
+}
+
+const saveMovieAsFavourite = (likedButton, movie) => {
+  likedButton.classList.toggle('liked');
+  let favouriteMoviesList = getFavouriteMovies();
+
+  if (favouriteMoviesList[movie.id]) {
+    delete favouriteMoviesList[movie.id];
+  } else {
+    favouriteMoviesList[movie.id] = movie;
+  }
+
+  localStorage.setItem('favouriteMovies', JSON.stringify(favouriteMoviesList));
+  renderFavouriteMovies();
+}
+
+const renderFavouriteMovies = () => {
+  const favouriteMoviesList = getFavouriteMovies();
+  const favouriteMovies = Object.values(favouriteMoviesList);
+  generateMoviePosters(likedMovieList, favouriteMovies, { clearContent: true, liked: true });
+}
+
 const config = {
   root: null, // Sets the framing element to the viewport
   rootMargin: "0px",
@@ -37,7 +62,7 @@ const calculateLazyLoadExecution = async ({ url, params }) => {
         }
       });
     const movies = data.results;
-    generateMoviePosters(genericSection, movies, { clearContent: false });
+    generateMoviePosters(genericSection, movies);
   }
 }
 
@@ -89,7 +114,7 @@ const generateImage = (url, alt, className, lazyLoad) => {
     img.classList.add(className);
   }
   // img.setAttribute('src', url);
-  img.setAttribute(lazyLoad ? 'data-img' : 'src', url);
+  img.setAttribute(lazyLoad ? 'src' : 'src', url);
   img.setAttribute('alt', alt);
 
   img.addEventListener('error', (event) => {
@@ -136,7 +161,7 @@ const generateHighlightSection = (trendingMovieHighlight, movie) => {
   trendingMovieHighlight.appendChild(div);
 };
 
-const generateMoviePosters = (target, movies, { clearContent = true, size = 300, } = {}) => {
+const generateMoviePosters = (target, movies, { clearContent = true, size = 300, image_path = 'poster_path' } = {}) => {
 
   if (clearContent) {
     target.innerHTML = '';
@@ -144,7 +169,7 @@ const generateMoviePosters = (target, movies, { clearContent = true, size = 300,
   movies.forEach(movie => {
     const poster = 'poster_path';
     const img = generateImage(
-      `${IMG_URL}/t/p/w${size}${movie.poster_path}`,
+      `${IMG_URL}/t/p/w${size}${movie[image_path] || movie.poster_path}`,
       movie.title,
       'movie-img',
       true
@@ -154,18 +179,31 @@ const generateMoviePosters = (target, movies, { clearContent = true, size = 300,
     movieTitle.classList.add('movie-title');
     movieTitle.innerHTML = `<span>${movie.title}</span>`;
 
+    const likeButton = document.createElement('button');
+    likeButton.classList.add('btn-like');
+    const favouriteMovies = getFavouriteMovies();
+    if (favouriteMovies[movie.id]) {
+      likeButton.classList.add('liked');
+    }
+
+    likeButton.innerHTML = '<span class="icon material-symbols-rounded">favorite</span>';
+    likeButton.addEventListener('click', () => {
+      saveMovieAsFavourite(likeButton, movie);
+    });
+
     const movieWrapper = document.createElement('div');
     movieWrapper.classList.add('movie-wrapper');
     movieWrapper.appendChild(img);
     movieWrapper.appendChild(movieTitle);
     movieWrapper.innerHTML += generateRating(movie.vote_average);
+    movieWrapper.addEventListener('click', () => {
+      location.hash = `#movie=${movie.id}`;
+    });
 
     const article = document.createElement('article');
     article.classList.add('movie-container');
     article.appendChild(movieWrapper);
-    article.addEventListener('click', () => {
-      location.hash = `#movie=${movie.id}`;
-    });
+    article.appendChild(likeButton);
     // img.parentElement.classList.add('skeleton');
     target.appendChild(article);
   });
@@ -224,128 +262,6 @@ const generateMovieCast = (target, cast) => {
   });
 }
 
-/** Fetch Trending Movies */
-const getMovieVideoByMovieId = async (id) => {
-  moviePlayer.innerHTML = '';
-  const { data } = await api.get(`/movie/${id}/videos`, {
-    params: {
-      language: getLanguageSelectorValue(),
-    }
-  });
-  const results = data.results;
-  let youtubeVideo = results.find(video =>
-    video.site === 'YouTube' &&
-    video.type === 'Trailer' &&
-    video.official === true
-  );
-  if (!youtubeVideo) {
-    youtubeVideo = results.find(video =>
-      video.site === 'YouTube' &&
-      video.type === 'Trailer'
-    )
-  }
-
-  if (youtubeVideo) {
-    moviePlayer.innerHTML = `
-    <iframe
-      src="https://www.youtube.com/embed/${youtubeVideo.key}?autoplay=1&mute=1&loop=0&controls=0&showinfo=0&autohide=1&modestbranding=1"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    ></iframe>
-    `;
-  }
-}
-
-const getTrendingMoviesPreview = async () => {
-  const { data } = await api.get('/trending/movie/day',
-    {
-      params: {
-        language: getLanguageSelectorValue(),
-      }
-    });
-  const movies = data.results;
-  const featuredMovie = movies[0];
-  generateHighlightSection(trendingMovieHighlight, featuredMovie);
-  movies.shift();
-  generateMoviePosters(trendingMoviesPreviewList, movies);
-}
-
-const getCategoriesPreview = async () => {
-  const { data } = await api.get('/genre/movie/list',
-    {
-      params: {
-        language: getLanguageSelectorValue(),
-      }
-    });
-  const categories = data.genres;
-  generateCategories(categoriesPreviewList, categories);
-}
-
-const getMoviesByCategoryId = async (id) => {
-  const { data } = await api.get('/discover/movie', {
-    params: { with_genres: id },
-    language: getLanguageSelectorValue(),
-  });
-  const movies = data.results;
-  generateMoviePosters(genericSection, movies);
-}
-
-const getPaginatedMoviesByCategoryId = (id) => {
-  return async () => {
-    await calculateLazyLoadExecution({
-      url: '/discover/movie',
-      params: { with_genres: id },
-    });
-  }
-}
-
-const getPaginatedMoviesByQueryParam = (query) => {
-  return async () => {
-    await calculateLazyLoadExecution({
-      url: '/search/movie',
-      params: { query },
-    });
-  }
-}
-
-const getMoviesByQueryParam = async (query) => {
-  const { data } = await api.get('/search/movie', {
-    params: { query },
-    language: getLanguageSelectorValue(),
-  });
-  const movies = data.results;
-  maxPage = data.total_pages;
-  generateMoviePosters(genericSection, movies);
-}
-
-const getPaginatedTrendingMovies = async () => {
-  await calculateLazyLoadExecution({
-    url: '/trending/movie/day',
-    params: {},
-  });
-}
-
-const getTrendingMovies = async () => {
-  const { data } = await api.get('/trending/movie/day',
-    {
-      params: {
-        language: getLanguageSelectorValue(),
-      }
-    });
-  const movies = data.results;
-  maxPage = data.total_pages;
-  generateMoviePosters(genericSection, movies);
-}
-
-const getRelatedMoviesById = async (id) => {
-  const { data } = await api.get(`/movie/${id}/similar`, {
-    params: {
-      language: getLanguageSelectorValue(),
-    }
-  });
-  generateMoviePosters(movieDetailRecommendedList, data.results);
-}
-
 const getMovieCastById = async (id) => {
   const { data } = await api.get(`/movie/${id}/credits`, {
     params: {
@@ -386,5 +302,129 @@ const getMoviesById = async (id) => {
   generateCategories(movieDetailCategoriesList, data.genres);
   getRelatedMoviesById(id);
 }
+
+/** Fetch Trending Movies */
+const getMovieVideoByMovieId = async (id) => {
+  moviePlayer.innerHTML = '';
+  const { data } = await api.get(`/movie/${id}/videos`, {
+    params: {
+      language: getLanguageSelectorValue(),
+    }
+  });
+  const results = data.results;
+  let youtubeVideo = results.find(video =>
+    video.site === 'YouTube' &&
+    video.type === 'Trailer' &&
+    video.official === true
+  );
+  if (!youtubeVideo) {
+    youtubeVideo = results.find(video =>
+      video.site === 'YouTube' &&
+      video.type === 'Trailer'
+    )
+  }
+
+  if (youtubeVideo) {
+    moviePlayer.innerHTML = `
+    <iframe
+      src="https://www.youtube.com/embed/${youtubeVideo.key}?autoplay=1&mute=1&loop=0&controls=0&showinfo=0&autohide=1&modestbranding=1"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    ></iframe>
+    `;
+  }
+}
+
+const getCategoriesPreview = async () => {
+  const { data } = await api.get('/genre/movie/list',
+    {
+      params: {
+        language: getLanguageSelectorValue(),
+      }
+    });
+  const categories = data.genres;
+  generateCategories(categoriesPreviewList, categories);
+}
+
+const getMoviesByCategoryId = async (id) => {
+  const { data } = await api.get('/discover/movie', {
+    params: { with_genres: id },
+    language: getLanguageSelectorValue(),
+  });
+  const movies = data.results;
+  generateMoviePosters(genericSection, movies);
+}
+
+const getPaginatedMoviesByCategoryId = (id) => {
+  return async () => {
+    await calculateLazyLoadExecution({
+      url: '/discover/movie',
+      params: { with_genres: id },
+    });
+  }
+}
+
+const getMoviesByQueryParam = async (query) => {
+  const { data } = await api.get('/search/movie', {
+    params: { query },
+    language: getLanguageSelectorValue(),
+  });
+  const movies = data.results;
+  maxPage = data.total_pages;
+  generateMoviePosters(genericSection, movies);
+}
+
+const getPaginatedMoviesByQueryParam = (query) => {
+  return async () => {
+    await calculateLazyLoadExecution({
+      url: '/search/movie',
+      params: { query },
+    });
+  }
+}
+
+const getTrendingMoviesPreview = async () => {
+  const { data } = await api.get('/trending/movie/day',
+    {
+      params: {
+        language: getLanguageSelectorValue(),
+      }
+    });
+  const movies = data.results;
+  const featuredMovie = movies[0];
+  generateHighlightSection(trendingMovieHighlight, featuredMovie);
+  movies.shift();
+  generateMoviePosters(trendingMoviesPreviewList, movies);
+}
+
+const getTrendingMovies = async () => {
+  const { data } = await api.get('/trending/movie/day',
+    {
+      params: {
+        language: getLanguageSelectorValue(),
+      }
+    });
+  const movies = data.results;
+  maxPage = data.total_pages;
+  generateMoviePosters(genericSection, movies);
+}
+
+const getPaginatedTrendingMovies = async () => {
+  await calculateLazyLoadExecution({
+    url: '/trending/movie/day',
+    params: {},
+  });
+}
+
+const getRelatedMoviesById = async (id) => {
+  const { data } = await api.get(`/movie/${id}/similar`, {
+    params: {
+      language: getLanguageSelectorValue(),
+    }
+  });
+  generateMoviePosters(movieDetailRecommendedList, data.results, { image_path: 'backdrop_path' });
+}
+
+
 
 

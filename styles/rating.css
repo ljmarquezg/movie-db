@@ -1,0 +1,91 @@
+.rating-container {
+    height: var(--rating-container);
+    width: var(--rating-container);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 5px;
+    left: auto;
+    right: 5px;
+    background-color: var(--color-dark);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.rating-container.small, .movie-container .rating-container {
+    width: var(--rating-container-sm);
+    height: var(--rating-container-sm);
+}
+
+.rating-container .rating-bar {
+    width: 80%;
+    height: 80%;
+    position: relative;
+    color: var(--color-light);
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    justify-content: center;
+}
+
+.rating-container .rating-bar svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    aspect-ratio: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.rating-container .rating-bar .progress-bar {
+    stroke-width: 20;
+    fill: transparent;
+    stroke-linecap: round;
+}
+
+.rating-container .rating-bar .progress-value {
+    stroke-width: 20;
+    animation: animate-bar 1s linear;
+    fill: transparent;
+    stroke-dasharray: 560;
+    stroke-linecap: round;
+    stroke: var(--color-skeleton-light);
+    animation: skeleton;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}
+
+.rating-bar.success .progress-bar {
+    stroke: var(--color-success-dark);
+}
+
+.rating-bar.success .progress-value {
+    stroke: var(--color-success);
+}
+
+.rating-bar.info .progress-bar {
+    stroke: var(--color-info-dark);
+}
+
+.rating-bar.info .progress-value {
+    stroke: var(--color-info);
+}
+
+.rating-bar.warning .progress-bar {
+    stroke: var(--color-warning-dark);
+}
+
+.rating-bar.warning .progress-value {
+    stroke: var(--color-warning);
+}
+
+.rating-bar.danger .progress-bar {
+    stroke: var(--color-danger-dark);
+}
+
+.rating-bar.danger .progress-value {
+    stroke: var(--color-danger);
+}

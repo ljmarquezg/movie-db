@@ -6,6 +6,7 @@
     gap: 1rem;
     padding-left: 0;
 }
+
 .category-container {
     border: solid 1px var(--color-gray);
     background-color: var(--color-gray);
@@ -17,17 +18,15 @@
     align-items: center;
     justify-content: center;
     line-height: .75rem;
+    cursor: pointer;
+}
+
+.category-container:hover {
+    background-color: var(--color-primary);
+    color: var(--color-dark);
 }
 
 .category-title {
     margin: 0;
     font-size: var(--font-size-small);
-}
-
-.category-container {
-    cursor: pointer;
-}
-.category-container:hover {
-    background-color: var(--color-primary);
-    color: var(--color-dark);
 }

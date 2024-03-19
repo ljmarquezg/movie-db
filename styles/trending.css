@@ -1,0 +1,16 @@
+.trendingPreview-highlight {
+    min-height: 70vh;
+    /**margin-top: -72px; **/
+}
+.trendingPreview-movieList, .liked-movieList {
+    width: 100%;
+    overflow: auto;
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 1.5rem 0;
+}
+.trendingPreview-highlight:not(.inactive) ~ .main-content {
+    margin-top: -20vh;
+    z-index: 1;
+    position: relative;
+}

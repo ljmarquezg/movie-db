@@ -1,4 +1,4 @@
-let infiniteScroll;
+  let infiniteScroll;
 
 const hideSections = (sectionList) => {
   if (sectionList.length > 0) {
@@ -27,15 +27,16 @@ const hideMovieDetailsSection = () => {
 const homePage = () => {
   hideMovieDetailsSection();
   hideSections([arrowBtn, headerCategoryTitle, genericSection, movieDetailSection]);
-  showSections([headerTitle, searchForm, trendingPreviewSection, trendingMovieHighlight, categoriesPreviewSection])
+  showSections([headerTitle, likedMovieList, searchForm, trendingPreviewSection, trendingMovieHighlight, categoriesPreviewSection])
 
   getTrendingMoviesPreview();
   getCategoriesPreview();
+  renderFavouriteMovies();
 }
 
 const trendsPage = () => {
   hideMovieDetailsSection();
-  hideSections([categoriesPreviewSection, headerTitle, headerCategoryTitle, trendingPreviewSection, movieDetailSection, searchForm]);
+  hideSections([categoriesPreviewSection, headerTitle, headerCategoryTitle, likedMovieList, trendingPreviewSection, movieDetailSection, searchForm]);
   showSections([arrowBtn, genericSection, movieVideoContainer]);
   getTrendingMovies();
   infiniteScroll = getPaginatedTrendingMovies;
@@ -43,7 +44,7 @@ const trendsPage = () => {
 
 const categoryPage = () => {
   hideMovieDetailsSection();
-  hideSections([headerTitle, searchForm, movieDetailSection, movieVideoContainer, trendingPreviewSection, trendingMovieHighlight, categoriesPreviewSection]);
+  hideSections([headerTitle, likedMovieList, searchForm, movieDetailSection, movieVideoContainer, trendingPreviewSection, trendingMovieHighlight, categoriesPreviewSection]);
   showSections([arrowBtn, headerCategoryTitle, genericSection]);
   const [_, caetgoryData] = location.hash.split('=');
 
@@ -55,7 +56,7 @@ const categoryPage = () => {
 
 const searchPage = () => {
   hideMovieDetailsSection();
-  hideSections([categoriesPreviewSection, headerTitle, headerCategoryTitle, movieDetailSection, movieVideoContainer, trendingMovieHighlight, trendingPreviewSection]);
+  hideSections([categoriesPreviewSection, headerTitle, headerCategoryTitle, likedMovieList, movieDetailSection, movieVideoContainer, trendingMovieHighlight, trendingPreviewSection]);
   showSections([arrowBtn, searchForm, genericSection]);
 
   const [_, searchParam] = location.hash.split('=');
@@ -64,7 +65,7 @@ const searchPage = () => {
 }
 
 const movieDetailsPage = () => {
-  hideSections([categoriesPreviewSection, headerCategoryTitle, genericSection, searchForm, trendingMovieHighlight, trendingPreviewSection]);
+  hideSections([categoriesPreviewSection, headerCategoryTitle, genericSection, likedMovieList,  searchForm, trendingMovieHighlight, trendingPreviewSection]);
   showSections([arrowBtn, headerTitle, movieDetailSection, movieDetailTitle, movieDetailDescription, movieDetailScore]);
 
   const [_, movieId] = location.hash.split('=');
@@ -81,6 +82,9 @@ const navigator = () => {
   switch (true) {
     case location.hash.startsWith('#trends'):
       trendsPage();
+      break;
+    case location.hash.startsWith('#categories'):
+      categoryPage()
       break;
     case location.hash.startsWith('#category='):
       categoryPage()

@@ -4,3 +4,7 @@
     justify-content: center;
     font-size: inherit;
 }
+
+.material-symbols-rounded.filled {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24
+}

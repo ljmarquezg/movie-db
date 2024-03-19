@@ -1,10 +1,11 @@
 .navigation-container {
+    position: fixed;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 1rem;
-    background-color: transparent;
     border-bottom: 1px solid var(--color-gray);
+    background-color: var(--color-dark-opacity);
     color: white;
     top: 0;
     left: 0;
@@ -53,10 +54,8 @@ a.brand:hover {
 
 .user-profile {
     margin-left: 12px;
-}
-
-.user-image {
-    height: 48px;
+    height: 64px;
+    width: 64px;
 }
 
 .brand {

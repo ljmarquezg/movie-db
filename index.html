@@ -23,6 +23,18 @@
   />
   <link
     rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+  />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+  />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+  />
+  <link
+    rel="stylesheet"
     href="styles/app.css"
   >
   <script src="https://www.youtube.com/iframe_api"></script>
@@ -43,22 +55,45 @@
 
     <nav>
       <ul>
-        <li><a
-          class="trendingText"
-          href="#trends"
-        >Trending</a></li>
-        <li><a
-          class="categoryText"
-          href="#categories"
-        >Categories</a></li>
-        <li><a
-          class="aboutText"
-          href="#about"
-        >About</a></li>
+        <li>
+          <a
+            class="trendingText"
+            href="#trends"
+          >
+            Trending
+          </a>
+        </li>
+        <li>
+          <a
+            class="aboutText"
+            href="#about"
+          >
+            About
+          </a>
+        </li>
       </ul>
     </nav>
 
     <div class="nav-end">
+      <!-- Search Form -->
+      <div
+        id="searchForm"
+        class="search"
+      >
+        <input
+          type="text"
+          placeholder="Search"
+          class="search-input"
+        >
+        <button
+          id="searchBtn"
+          class="search-button"
+        >
+          <span class="material-symbols-outlined">search</span>
+        </button>
+      </div>
+
+      <!-- Language Selector -->
       <select
         name="language"
         id="languageSelector"
@@ -67,6 +102,8 @@
         <option value="en">English</option>
         <option value="es">Spanish</option>
       </select>
+
+      <!-- User profile image -->
       <div class="user-profile">
         <img
           src="./images/user.png"
@@ -94,32 +131,14 @@
 </div>
 
 <div class="container main-content">
-  <!-- Search Form -->
-  <div
-    id="searchForm"
-    class="search"
-  >
-    <input
-      type="text"
-      placeholder="Search"
-      class="search-input"
-    >
-    <button
-      id="searchBtn"
-      class="search-button"
-    >
-      <img
-        src="./images/search.svg"
-        alt="Search"
-      >
-    </button>
-  </div>
-
-  <!-- Trengind Movies -->
+  <!-- Trending Movies -->
   <section id="tendingPreview">
     <div class="tittle-wrapper">
       <h2 class="trendingMoviesText h5">Trending Movies</h2>
-      <button id="trendingBtn" class="btn btn-primary viewAllText inactive">View All
+      <button
+        id="trendingBtn"
+        class="btn btn-primary viewAllText inactive"
+      >View All
       </button>
     </div>
 
@@ -273,7 +292,10 @@
   </section>
 
   <!-- Movie Categories -->
-  <section id="categoriesPreview" class="inactive">
+  <section
+    id="categoriesPreview"
+    class="inactive"
+  >
     <h2 class="categoryText h5"></h2>
     <article class="categoriesPreview-movieList">
       <div class="category-container skeleton"><h3 class="category-title"></h3></div>
@@ -290,7 +312,7 @@
     <article class="categoriesPreview-list"></article>
   </section>
 
-  <!-- Generic List -->
+  <!-- Movie Details -->
   <section id="movieDetail">
     <div class="movieDetail-main">
       <!-- Video Section -->
@@ -324,9 +346,163 @@
 
     <!-- Recommended Sidebar -->
     <div class="movieDetail-sidebar">
-      <h3 class="movieDetail-recommendation-title"></h3>
+      <h3 class="movieDetail-recommendation-title h5"></h3>
       <ul class="movieDetail-recommended-list"></ul>
       <div class="movieDetail-trailer"></div>
+    </div>
+  </section>
+
+  <section
+    id="liked"
+    class="liked-container"
+  >
+    <h2 class="h5 liked-header">Peliculas Favoritas</h2>
+    <div class="liked-movieList">
+      <article class="movie-container skeleton">
+        <div class="movie-wrapper">
+          <h3 class="movie-title"></h3>
+          <div class="rating-container">
+            <div class="rating-bar">
+              <svg
+                x="0px"
+                y="0px"
+                viewBox="0 0 200 200"
+              >
+                <circle
+                  class="progress-bar"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                ></circle>
+                <circle
+                  class="progress-value"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                  stroke-dashoffset="84.92000000000002"
+                ></circle>
+              </svg>
+              <div class="percentage"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="movie-container skeleton">
+        <div class="movie-wrapper">
+          <h3 class="movie-title"></h3>
+          <div class="rating-container">
+            <div class="rating-bar">
+              <svg
+                x="0px"
+                y="0px"
+                viewBox="0 0 200 200"
+              >
+                <circle
+                  class="progress-bar"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                ></circle>
+                <circle
+                  class="progress-value"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                  stroke-dashoffset="84.92000000000002"
+                ></circle>
+              </svg>
+              <div class="percentage"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="movie-container skeleton">
+        <div class="movie-wrapper">
+          <h3 class="movie-title"></h3>
+          <div class="rating-container">
+            <div class="rating-bar">
+              <svg
+                x="0px"
+                y="0px"
+                viewBox="0 0 200 200"
+              >
+                <circle
+                  class="progress-bar"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                ></circle>
+                <circle
+                  class="progress-value"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                  stroke-dashoffset="84.92000000000002"
+                ></circle>
+              </svg>
+              <div class="percentage"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="movie-container skeleton">
+        <div class="movie-wrapper">
+          <h3 class="movie-title"></h3>
+          <div class="rating-container">
+            <div class="rating-bar">
+              <svg
+                x="0px"
+                y="0px"
+                viewBox="0 0 200 200"
+              >
+                <circle
+                  class="progress-bar"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                ></circle>
+                <circle
+                  class="progress-value"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                  stroke-dashoffset="84.92000000000002"
+                ></circle>
+              </svg>
+              <div class="percentage"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="movie-container skeleton">
+        <div class="movie-wrapper">
+          <h3 class="movie-title"></h3>
+          <div class="rating-container">
+            <div class="rating-bar">
+              <svg
+                x="0px"
+                y="0px"
+                viewBox="0 0 200 200"
+              >
+                <circle
+                  class="progress-bar"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                ></circle>
+                <circle
+                  class="progress-value"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                  stroke-dashoffset="84.92000000000002"
+                ></circle>
+              </svg>
+              <div class="percentage"></div>
+            </div>
+          </div>
+        </div>
+      </article>
     </div>
   </section>
 </div>

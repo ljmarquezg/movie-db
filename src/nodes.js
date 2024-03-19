@@ -41,3 +41,5 @@ const movieDetailRecommendedTitle = document.querySelector('.movieDetail-recomme
 const movieDetailRecommendedList = document.querySelector('.movieDetail-recommended-list');
 const movieDetailCastTitle = document.querySelector('.movieDetail-cast-title');
 const movieDetailCastList = document.querySelector('.movieDetail-cast-list');
+
+const likedMovieList = document.querySelector('.liked-movieList');
